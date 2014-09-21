@@ -7,7 +7,7 @@ output: html_document
 
 This is an R Markdown document for Coursera Practical Machine Learning submission. R code involved at each step will be numbered accordingly and display as a code chunk
 
-### Initialization of seed and working directory to publish prediction result and definition of function
+#### Initialization of seed and working directory to publish prediction result and definition of function
 
 ```{r}
 set.seed(32323)
