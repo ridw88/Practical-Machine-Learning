@@ -5,7 +5,7 @@ date: "Sunday, September 21, 2014"
 output: html_document
 ---
 
-This is an R Markdown document for Coursera Practical Machine Learning submission. R code involved at each step will be numbered accordingly and display as a code chunk
+This is an R Markdown document for Coursera Practical Machine Learning submission. R code involved at each step (in bold) will be  display as a code chunk
 
 #### Initialization of seed and working directory to publish prediction result and definition of function
 
@@ -22,21 +22,21 @@ pml_write_files = function(x){
 }
 ```
 
-2. Import required library to project
+### Import required library to project
 
 ```{r}
 library(caret); library(kernlab); library(ggplot2)
 library(foreach); library(randomForest); library(doParallel)
 ```
 
-3. Import training and testing data
+### Import training and testing data
 
 ```{r}
 ori_trainfile <- read.csv("F:/Study/Coursera/Practical Machine Learning/Project/pml-training.csv")
 ori_testfile <- read.csv("F:/Study/Coursera/Practical Machine Learning/Project/pml-testing.csv")
 ```
 
-4. Finalize data column to be used (remove near zero variance, NA, and empty column for both ori_train/test file)
+### Finalize data column to be used (remove near zero variance, NA, and empty column for both ori_train/test file)
 
 ```{r}
 ori_trainfile <- ori_trainfile[, 3:dim(ori_trainfile)[2]]
@@ -53,7 +53,7 @@ ori_testfile <- ori_testfile[,zero_var_col$nzv == FALSE]
 ori_trainfile <- ori_trainfile[,-3]; ori_testfile <- ori_testfile[,-3]
 ```
 
-5. Testing correlation matrix and illustrate non linearness by feature plot
+### Testing correlation matrix and illustrate non linearness by feature plot
 
 ```{r}
 corrmatrix <- abs(cor(ori_trainfile[,-ncol(ori_trainfile)])); diag(corrmatrix)<-0
@@ -62,9 +62,7 @@ which(corrmatrix > 0.8,arr.ind=T)
 featurePlot(x=ori_trainfile[,c("roll_belt","pitch_belt","gyros_belt_x")],y=ori_trainfile$classe,plot="pairs")
 ```
 
-As can be seen. Only 38 pairs (19 combinations) out of 1485 combinations are highly correlated (i.e. correlation > 0.8). Feature plots illustrate the this non-linear relationship in general.
-
-6. Data slicing (training, cross validation), train model, and cross validation result using random forests algorithm. Using parallel processing to fit the random forest algorithm
+### Data slicing (training, cross validation), train model, and cross validation result using random forests algorithm. Using parallel processing to fit the random forest algorithm
 
 ```{r}
 inTrain <- createDataPartition(y=ori_trainfile$classe,p=0.6,list=FALSE)
@@ -85,9 +83,8 @@ predcross <- predict(parrf_modfit,crossvalid[,-ncol(crossvalid)])
 table(predcross,crossvalid$classe)
 confusionMatrix(predcross,crossvalid$classe)
 ```
-Showing accuracy of 100% and 99.85% for testing and cross validation out of sample testing
 
-7. Predict the final outcome using real testing file (ori_testfile)
+### Predict the final outcome using real testing file (ori_testfile)
 
 ```{r}
 predfinal <- predict(parrf_modfit,ori_testfile[,-ncol(ori_testfile)])
